@@ -1,0 +1,46 @@
+{
+  "name": "@dashkite/template",
+  "version": "0.0.0",
+  "description": "Handlebars plus helpers and paritals auto-loaded from file-system",
+  "exports": {
+    ".": {
+      "node": "./build/node/src/index.js"
+    }
+  },
+  "main": "build/node/src/index.js",
+  "files": [
+    "build/node/src"
+  ],
+  "scripts": {
+    "test": "genie test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dashkite/graphite.git"
+  },
+  "keywords": [],
+  "contributors": [
+    {
+      "name": "Dan Yoder",
+      "email": "dan@dashkite.com"
+    },
+    {
+      "name": "David Harper",
+      "email": "david@dashkite.com"
+    }
+  ],
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/dashkite/dolores/issues"
+  },
+  "homepage": "https://github.com/dashkite/dolores#readme",
+  "devDependencies": {
+    "@dashkite/genie": "^0.5.4",
+    "@dashkite/genie-presets": "^0.5.2"
+  },
+  "dependencies": {
+    "@dashkite/joy": "^0.3.14",
+    "fast-glob": "^3.2.7",
+    "handlebars": "^4.7.7"
+  }
+}
