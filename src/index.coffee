@@ -2,21 +2,41 @@ import FS from "fs/promises"
 import Path from "path"
 import Handlebars from "handlebars"
 # import { globby as glob } from "globby"
+import YAML from "js-yaml"
 import glob from "fast-glob"
 import * as _ from "@dashkite/joy"
 
 registerHelpers = (self) ->
   self._.h.registerHelper {
-    _...
+    first: _.first
+    rest: _.rest
+    filter: _.select
+    project: _.project
+    join: _.join
+    values: _.values
+    equal: _.eq
     empty: _.isEmpty
-    templateCase: _.pipe [ _.normalize, _.camelCase, _.capitalize ]
+    dashed: _.dashed
+    camelCase: _.camelCase
+    capitalize: _.capitalize
+    titleCase: _.titleCase
+    # TODO add wrap and indent to Joy?
+    wrap: (width, text) ->
+      text
+        .match ///.{1,#{width}}(\s+|$)///g
+        .join "\n"
+    indent: (n, text) -> text.replace /\n/g, "\n#{ " ".repeat n }"
+    yaml: (value) -> YAML.dump value
+    json: (value) -> JSON.stringify value, null, 2
   }
 
 registerPartials = (self) ->
-  for path in await glob "**/_*.hbs", cwd: self.root
-    name = path.replace /\.\w+$/, ""
-    console.log name
-    self._.h.registerPartial name, await self.read name
+  for path in await glob [ "**/_*/*.hbs", "**/_*.hbs" ], cwd: self.root
+    name = path
+      .replace /\.hbs$/, ""
+      .replace /\/\_/, "/"
+      .replace /^\_/, ""
+    self._.h.registerPartial name, await self.read path
 
 class Templates
 
@@ -43,7 +63,7 @@ class Templates
     FS.readFile ( @resolve name ), "utf8"
 
   resolve: (name) ->
-    Path.resolve @root, "#{name}.hbs"
-
+    Path.resolve @root,
+      if _.endsWith ".hbs", name then name else "#{name}.hbs"
 
 export default Templates
